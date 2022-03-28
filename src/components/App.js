@@ -7,7 +7,6 @@ function App() {
   const [dogs, setDogs] = useState('');
   const [dogClicked, setDogClicked] = useState('');
   const [filterOn, setFilterOn] = useState(false);
-  const [dogsToRender, setDogsToRender] = useState(dogs);
 
   useEffect(() => {
     fetch('http://localhost:3001/pups')
@@ -15,20 +14,22 @@ function App() {
       .then((data) => setDogs(data));
   }, []);
 
-  // useEffect(() => {
-  //   if (filterOn) setDogsToRender(dogs.filter((dog) => dog.isGoodDog));
-  //   else setDogsToRender(dogs);
-  // }, [filterOn]);
+  let dogsToRender;
+  if (filterOn) dogsToRender = dogs.filter((dog) => dog.isGoodDog);
+  else dogsToRender = dogs;
 
   function onFilterClick() {
-    debugger;
     setFilterOn((filterOn) => !filterOn);
   }
 
   return (
     <div className="App">
       <Filter onFilterClick={onFilterClick} filterOn={filterOn} />
-      <DogBar filterOn={filterOn} dogs={dogs} setDogClicked={setDogClicked} />
+      <DogBar
+        filterOn={filterOn}
+        dogs={dogsToRender}
+        setDogClicked={setDogClicked}
+      />
       <div id="dog-summary-container">
         <h1>DOGGO:</h1>
         <DogInfo dog={dogClicked} setDogClicked={setDogClicked} />
